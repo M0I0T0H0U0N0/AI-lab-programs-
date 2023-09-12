@@ -1,70 +1,49 @@
-
-
-global N
-N = 5
-
 def printSolution(board):
-	for i in range(N):
-		for j in range(N):
-			print (board[i][j],end=' ')
-		print()
-
-
+    for i in range(N):
+        for j in range(N):
+            print(board[i][j], end=' ')
+        print()
 
 def isSafe(board, row, col):
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
 
-	for i in range(col):
-		if board[row][i] == 1:
-			return False
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
 
-	for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
-		if board[i][j] == 1:
-			return False
+    for i, j in zip(range(row, N, 1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
 
-	for i, j in zip(range(row, N, 1), range(col, -1, -1)):
-		if board[i][j] == 1:
-			return False
-
-	return True
+    return True
 
 def solveNQUtil(board, col):
-	
-	if col >= N:
-		return True
+    if col >= N:
+        return True
 
-	
-	for i in range(N):
+    for i in range(N):
+        if isSafe(board, i, col):
+            board[i][col] = 1
 
-		if isSafe(board, i, col):
-			
-			board[i][col] = 1
+            if solveNQUtil(board, col + 1) == True:
+                return True
 
+            board[i][col] = 0
 
-			if solveNQUtil(board, col + 1) == True:
-				return True
+    return False
 
-			
-			board[i][col] = 0
+def solveNQ(N):
+    board = [[0 for _ in range(N)] for _ in range(N)]
 
-	
-	return False
+    if solveNQUtil(board, 0) == False:
+        print("Solution does not exist")
+        return False
 
-.
-def solveNQ():
-	board = [ [0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0]
-			]
+    printSolution(board)
+    return True
 
-	if solveNQUtil(board, 0) == False:
-		print ("Solution does not exist")
-		return False
-
-	printSolution(board)
-	return True
-
-solveNQ()
-
-
+# Get user input for the board size
+N = int(input("Enter the value of N for the N-Queens problem: "))
+solveNQ(N)
